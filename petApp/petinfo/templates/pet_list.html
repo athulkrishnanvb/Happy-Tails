@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(to right, #bfd3df, #793c3d);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.8); /* Transparent black navbar */
+        }
+        .navbar-brand {
+            font-size: 2rem; /* Increased font size */
+            font-weight: bold;
+            color: white;
+        }
+        .nav-link {
+            color: white;
+            font-size: 1.5rem; /* Increased font size */
+            margin-right: 15px;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #ff9966; /* Hover color */
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+            position: relative; /* Added for positioning the posted date */
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card-text {
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background-color: #ff5e62;
+            border: none;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-color: #ff9966;
+        }
+        .badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+        }
+        .posted-date {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Happy Tails</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'homepage' %}">HOME</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="mb-4">
+                    <h5>Filters</h5>
+                    <form action="{% url 'filtered_pet_list' %}" method="GET">
+                        <div class="mb-3">
+                            <label for="breedFilter" class="form-label">Breed</label>
+                            <select class="form-select" id="breedFilter" name="breed">
+                                <option value="">All</option>
+                                <option value="Labrador Retriever">Labrador Retriever</option>
+                                <option value="Golden Retriever">Golden Retriever</option>
+                                <option value="Husky">Husky</option>
+                                <option value="PIT BULL">PIT BULL</option>
+                                <option value="Pomeranian">Pomeranian</option>
+                                <option value="CANE CORSO">CANE CORSO</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="shelterFilter" class="form-label">Shelter</label>
+                            <select class="form-select" id="shelterFilter" name="shelter">
+                                <option value="">All</option>
+                                <option value="Shelter A">alappy</option>
+                                <option value="Shelter B">kollam</option>
+                                <option value="Shelter C">kochi</option>
+                                <option value="Shelter D">Kannur</option>
+                                <option value="Shelter E">TVM</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <h2 class="mb-4 text-center" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight: bold;">Pet List</h2>
+                <div class="row">
+                    {% for pet in pets %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="posted-date">Posted on: {{ pet.created_at|date:"d M Y" }}</div>
+                            <img src="{{ pet.photo.url }}" class="card-img-top" alt="{{ pet.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ pet.name }}</h5>
+                                <p class="card-text"><strong>Breed:</strong> {{ pet.breed }}</p>
+                                <p class="card-text"><strong>Age:</strong> {{ pet.age }}</p>
+                                <p class="card-text"><strong>Gender:</strong> {{ pet.gender }}</p>
+                                <p class="card-text"><strong>Health Status:</strong> {{ pet.health_status }}</p>
+                                <p class="card-text"><strong>Description:</strong> {{ pet.description }}</p>
+                                <p class="card-text"><strong>Available:</strong> {{ pet.available }}</p>
+                                <p class="card-text"><strong>Shelter:</strong> {{ pet.shelter }}</p>
+                                {% if pet.available %}
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'adopt_pet' pet.id %}" class="btn btn-primary">Adopt</a>
+                                    {% else %}
+                                        <a href="{% url 'login_view' %}?next={% url 'adopt_pet' pet.id %}" class="btn btn-primary">Adopt</a>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">Adopted</span>
+                                {% endif %}
+                                {% if user.is_superuser or user.is_staff %}
+                                    <a href="{% url 'p_update' pet.id %}" class="btn btn-primary">Update</a>
+                                    <a href="{% url 'p_delete' pet.id %}" class="btn btn-danger">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+9M2eQF0evj6AzE+M0OVnY0yEw7r" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Shelter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-image: linear-gradient(#590556, #0CBABA); font-family: sans-serif;">
+    <div class="main" style="max-width: 400px; padding: 28px; margin: 0 28px; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.2); box-shadow: 0 15px 20px rgba(0,0,0,0.6);">
+        <form method="post" class="container">
+            {% csrf_token %}
+            <h3 style="color: white;">Add Shelter Details</h3>
+            <div class="mb-3">
+                <label class="form-label" style="color: white;">Name</label>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" style="color: white;">Address</label>
+                <textarea class="form-control" name="address"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" style="color: white;">Contact Info</label>
+                <input type="text" class="form-control" name="contact_info">
+            </div>
+            <!-- <div class="mb-3">
+                <label class="form-label" style="color: white;">Staff</label>
+                <select class="form-control" name="staff" multiple>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div> -->
+            <input type="submit" class="btn btn-primary" value="Add Shelter">
+        </form>
+    </div>
+</body>
+</html>
